@@ -177,4 +177,12 @@ datepickerOpts = &#123;
             <h5><strong>ngModel:</strong> {{getDate(date5) | date: "medium"}}</h5>
         </div>
     </section>
+    <section class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">DIsabled</h3></div>
+        <div class="panel-body">
+            <pre><code>&lt;datetime [disabled]="true" [(ngModel)]="date5" [hasClearButton]="true">&lt;/datetime></code></pre>
+            <datetime [disabled]="true" [(ngModel)]="date5" [hasClearButton]="true"></datetime>
+            <h5><strong>ngModel:</strong> {{getDate(date5) | date: "medium"}}</h5>
+        </div>
+    </section>
 </main>

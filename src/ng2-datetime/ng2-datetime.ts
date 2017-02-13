@@ -11,27 +11,30 @@ import { TimepickerEvent } from './timepicker-event-interface';
     <div class="form-inline">
         <div id="{{idDatePicker}}" class="input-group date">
             <input type="text" class="form-control"
-                   [attr.readonly]="readonly"
-                   [attr.required]="required"
+                   [required]="required || null"
+                   [disabled]="disabled || null"
                    [attr.placeholder]="datepickerOptions.placeholder || 'Choose date'"
                    [(ngModel)]="dateModel"
                    (keyup)="checkEmptyValue($event)"/>
-            <div class="input-group-addon">
-                <span [ngClass]="datepickerOptions.icon || 'glyphicon glyphicon-th'"></span>
+            <div class="input-group-addon" [class.disabled]="disabled">
+                <span [ngClass]="datepickerOptions.icon || 'fa fa-calendar'" [class.disabled]="disabled"></span>
             </div>
         </div>
         <div class="input-group bootstrap-timepicker timepicker">
             <input id="{{idTimePicker}}" type="text" class="form-control input-small" 
-                   [attr.readonly]="readonly"
-                   [attr.required]="required"
+                   [required]="required || null"
+                   [disabled]="disabled || null"
                    [attr.placeholder]="timepickerOptions.placeholder || 'Set time'"
                    [(ngModel)]="timeModel"
                    (keyup)="checkEmptyValue($event)">
-            <span class="input-group-addon"><i [ngClass]="timepickerOptions.icon || 'glyphicon glyphicon-time'"></i></span>
+            <span class="input-group-addon" [class.disabled]="disabled">
+                <i [ngClass]="timepickerOptions.icon || 'fa fa-clock-o'" [class.disabled]="disabled"></i>
+            </span>
         </div>
         <button *ngIf="hasClearButton" type="button" (click)="clearModels()">Clear</button>
     </div>
-   `
+   `,
+    styles: ['.invalidInput { border: solid 1.5px red; } .disabled {pointer-events: none}']
 })
 
 export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestroy, OnChanges {
@@ -39,7 +42,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
     @Input('timepicker') timepickerOptions: any = {};
     @Input('datepicker') datepickerOptions: any = {};
     @Input('hasClearButton') hasClearButton: boolean = false;
-    @Input() readonly: boolean = null;
+    @Input() disabled: boolean = null;
     @Input() required: boolean = null;
 
     date: Date; // ngModel
@@ -59,7 +62,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
     onTouched = () => {
     };
 
-    constructor(ngControl: NgControl) {
+    constructor(private ngControl: NgControl) {
         ngControl.valueAccessor = this; // override valueAccessor
     }
 
@@ -143,7 +146,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
 
     private init(): void {
         if (!this.datepicker && this.datepickerOptions !== false) {
-            let options = jQuery.extend({ enableOnReadonly: !this.readonly }, this.datepickerOptions);
+            let options = jQuery.extend({ enableOndisabled: !this.disabled }, this.datepickerOptions);
             this.datepicker = (<any>$('#' + this.idDatePicker)).datepicker(options);
             this.datepicker
                 .on('changeDate', (e: any) => {
@@ -167,6 +170,10 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
             this.timepicker = (<any>$('#' + this.idTimePicker)).timepicker(options);
             this.timepicker
                 .on('changeTime.timepicker', (e: TimepickerEvent) => {
+                    if (this.disabled) {
+                        return false;
+                    }
+
                     let { meridian, hours } = e.time;
 
                     if (meridian) {
