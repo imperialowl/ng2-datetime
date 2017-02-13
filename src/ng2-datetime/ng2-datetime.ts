@@ -184,7 +184,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
                         if (meridian === 'AM' && hours === 12) {
                             hours = hours - 12;
                         }
-                        hours = parseInt(this.pad(hours));
+                        hours = parseInt(this.pad(hours), 10);
                     }
 
                     if (!isDate(this.date)) {
@@ -235,7 +235,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
     }
 }
 
-let id: number = 0;
+let id = 0;
 function uniqueId(prefix: string): string {
     return prefix + ++id;
 }
