@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NKDatetime } from './ng2-datetime';
+import { NKDatetimeComponent } from './ng2-datetime.component';
 
 @NgModule({
     imports: [CommonModule, FormsModule],
-    exports: [NKDatetime],
-    declarations: [NKDatetime]
+    exports: [NKDatetimeComponent],
+    declarations: [NKDatetimeComponent]
 })
 export class NKDatetimeModule {
 }
