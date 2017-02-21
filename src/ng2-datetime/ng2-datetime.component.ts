@@ -37,40 +37,42 @@ import { TimepickerEvent } from './timepicker-event-interface';
     styles: ['.invalidInput { border: solid 1.5px red; } .disabled {pointer-events: none}']
 })
 
-export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestroy, OnChanges {
-    @Output() dateChange: EventEmitter<Date> = new EventEmitter<Date>();
-    @Input('timepicker') timepickerOptions: any = {};
-    @Input('datepicker') datepickerOptions: any = {};
-    @Input('hasClearButton') hasClearButton: boolean = false;
-    @Input() disabled: boolean = null;
-    @Input() required: boolean = null;
+export class NKDatetimeComponent implements ControlValueAccessor, AfterViewInit, OnDestroy, OnChanges {
+    @Output() public dateChange: EventEmitter<Date> = new EventEmitter<Date>();
+    @Input('timepickerOptions') public timepickerOptions: any = {};
+    @Input('datepickerOptions') public datepickerOptions: any = {};
+    @Input('hasClearButton') public hasClearButton: boolean = false;
+    @Input() public disabled: boolean = null;
+    @Input() public required: boolean = null;
 
-    date: Date; // ngModel
-    dateModel: string;
-    timeModel: string;
+    public date: Date; // ngModel
+    public dateModel: string;
+    public timeModel: string;
 
     // instances
-    datepicker: any;
-    timepicker: any;
+    public datepicker: any;
+    public timepicker: any;
 
-    idDatePicker: string = uniqueId('q-datepicker_');
-    idTimePicker: string = uniqueId('q-timepicker_');
+    public idDatePicker: string = uniqueId('q-datepicker_');
+    public idTimePicker: string = uniqueId('q-timepicker_');
 
     @HostListener('dateChange', ['$event'])
+    /* tslint:disable */
     onChange = (_: any) => {
     };
     onTouched = () => {
     };
+    /* tslint:enabled */
 
     constructor(private ngControl: NgControl) {
         ngControl.valueAccessor = this; // override valueAccessor
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.init();
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy() {
         if (this.datepicker) {
             this.datepicker.datepicker('destroy');
         }
@@ -79,7 +81,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
         }
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes) {
             if (changes['datepickerOptions'] && this.datepicker) {
                 this.datepicker.datepicker('destroy');
@@ -104,7 +106,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
         }
     }
 
-    writeValue(value: any): void {
+    public writeValue(value: any): void {
         this.date = value;
         if (isDate(this.date)) {
             setTimeout(() => {
@@ -115,15 +117,15 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
         }
     }
 
-    registerOnChange(fn: (_: any) => void): void {
+    public registerOnChange(fn: (_: any) => void): void {
         this.onChange = fn;
     }
 
-    registerOnTouched(fn: () => void): void {
+    public registerOnTouched(fn: () => void): void {
         this.onTouched = fn;
     }
 
-    checkEmptyValue(e: any) {
+    public checkEmptyValue(e: any) {
         const value = e.target.value;
         if (value === '' && (
                 this.timepickerOptions === false ||
@@ -134,7 +136,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
         }
     }
 
-    clearModels() {
+    public clearModels() {
         this.dateChange.emit(null);
         if (this.timepicker) {
             this.timepicker.timepicker('setTime', null);
